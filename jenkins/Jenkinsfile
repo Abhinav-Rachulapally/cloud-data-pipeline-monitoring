@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git 'https://github.com/abhinavrachulapally/cloud-data-pipeline-monitoring.git'
+            }
+        }
+        stage('Validate') {
+            steps {
+                sh 'pylint scripts/*.py'
+            }
+        }
+        stage('Deploy Glue Job') {
+            steps {
+                sh 'aws glue update-job --job-name retail-etl --job-update file://glue_job_config.json'
+            }
+        }
+    }
+}
